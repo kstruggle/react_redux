@@ -20,31 +20,19 @@ let reducer = (state={number:0},action)=>{  //state是状态树 可以是任意�
 let store = createStore(reducer);  //store == {getState,subscribe,dispatch}
 
 class Counter extends React.Component{
-  constructor(){
-    super();
-    this.state = {number:store.getState().number}
-  }
-  componentWillMount() {
-    this.unsubscribe = store.subscribe(()=>{   //把回调函数放进去
-      this.setState(
-        {number:store.getState().number}
-      )
-    })
-  }
-  componentWillUnmount() {   //组件取消挂载
-    this.unsubscribe();
-  }
   render() {
     return (
       <div>
-        <p>{this.state.number}</p>
+        <p>{store.getState().number}</p>
         <button onClick={()=>store.dispatch({type:INCREASE})}>+</button>
         <button onClick={()=>store.dispatch({type:DECREASE})}>-</button>
       </div>
     )
   }
 }
-
-ReactDOM.render(
-  <Counter/>,
-  document.getElementById('root'))
+let render = ()=>{
+  ReactDOM.render(<Counter/>,
+  document.getElementById('root')
+)}
+render();
+store.subscribe(render);
