@@ -1,29 +1,36 @@
 import React from 'react';
+
+import {store} from '../store';
+import {ADDLIST,DELETELIST} from '../action';   
+
+console.log('title',ADDLIST);
+
+
+
 // import {createStore} from '../redux';
-import {createStore} from '../redux';
 
 
-//定义action 的类型
-const ADDLIST = 'ADDLIST'    //添加
-const DELETELIST = 'DELETELIST'   //删除
+// //定义action 的类型
+// const ADDLIST = 'ADDLIST'    //添加
+// const DELETELIST = 'DELETELIST'   //删除
 
 //定义reducer
-let reducer = (state={list:['吃饭','睡觉']},action) =>{
-  if(action === undefined) return state;
-  switch (action.type) {
-    case ADDLIST:
-      return {list:[...state.list,action.text]};    //action,text 是传过来的输入的文本
-      break;
-    case DELETELIST:
-      let list = state.list;
-      list.splice(action.index,1)     //action.index   是传过来的 需要删除的index索引值
-      return {list:[...list]}     //我们的状态具有不变性，每次都要返回一个新的对象
-      break;
-    default:
-      return state
-  }
-}
-let store = createStore(reducer);  //store == {getState,subscribe,dispatch}
+// let reducer = (state={list:['吃饭','睡觉']},action) =>{
+//   if(action === undefined) return state;
+//   switch (action.type) {
+//     case ADDLIST:
+//       return {list:[...state.list,action.text]};    //action,text 是传过来的输入的文本
+//       break;
+//     case DELETELIST:
+//       let list = state.list;
+//       list.splice(action.index,1)     //action.index   是传过来的 需要删除的index索引值
+//       return {list:[...list]}     //我们的状态具有不变性，每次都要返回一个新的对象
+//       break;
+//     default:
+//       return state
+//   }
+// }
+//let store = createStore(reducer);  //store == {getState,subscribe,dispatch}
 
 
 //定义action
@@ -34,10 +41,10 @@ let deletelist = (index)=>(   // 返回函数一个json  如果多行就 加（�
   {type:DELETELIST,index}
 )
 
-export default class Todo extends React.Component{
+export default class TodoApp extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {list:store.getState().list}
+    this.state = {list:store.getState().todoapp.list}
   }
   handlekeydown = (e) =>{
     if(e.keyCode === 13 && e.target.value.length > 0){
@@ -53,12 +60,11 @@ export default class Todo extends React.Component{
   handleDelete = (index) => {
     store.dispatch(deletelist(index))
   }
-
   //订阅   改变完成之后自己要拿到这些值
   componentWillMount() {
     this.unsubscribe = store.subscribe(()=>{
       this.setState({
-        list:store.getState().list
+        list:store.getState().todoapp.list
       })
     })
   }
@@ -66,7 +72,6 @@ export default class Todo extends React.Component{
   componentWillUnmount() {
     this.unsubscribe()
   }
-// ()=>this.handleDelete(index)
   render(){
     return (
       <div>

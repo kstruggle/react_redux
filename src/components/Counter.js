@@ -1,24 +1,26 @@
 
 import React from 'react';
+import {store} from '../store';
+import {INCREASE,DECREASE} from '../action';
 
-import {createStore} from '../redux';
-const INCREASE = 'INCREASE'
-const DECREASE = 'DECREASE'
+// import {createStore} from '../redux';
+// const INCREASE = 'INCREASE'
+// const DECREASE = 'DECREASE'
 
-let reducer = (state={number:0},action)=>{  //state是状态树 可以是任意的结构  action 是纯对象
-  if(action === undefined) return state;
-  switch (action.type) {
-    case INCREASE:   //加
-      return {number:state.number + action.amount};
-      break;
-    case DECREASE:   //减
-      return {number:state.number - action.amount};
-      break;
-    default:
-      return state
-  }
-}
-let store = createStore(reducer);  //store == {getState,subscribe,dispatch}
+// let reducer = (state={number:0},action)=>{  //state是状态树 可以是任意的结构  action 是纯对象
+//   if(action === undefined) return state;
+//   switch (action.type) {
+//     case INCREASE:   //加
+//       return {number:state.number + action.amount};
+//       break;
+//     case DECREASE:   //减
+//       return {number:state.number - action.amount};
+//       break;
+//     default:
+//       return state
+//   }
+// }
+//let store = createStore(reducer);  //store == {getState,subscribe,dispatch}
 
 
 //定义action
@@ -29,17 +31,15 @@ let decrease = (amount)=>(
   {type:DECREASE,amount}
 )
 
-
-
 export default class Counter extends React.Component{
   constructor(){
     super();
-    this.state = {number:store.getState().number}
+    this.state = {number:store.getState().counter.number}
   }
   componentWillMount() {
     this.unsubscribe = store.subscribe(()=>{   //把回调函数放进去
       this.setState(
-        {number:store.getState().number}   //改变 this.state    store.getState()
+        {number:store.getState().counter.number}   //改变 this.state    store.getState()
       )
     })
   }
